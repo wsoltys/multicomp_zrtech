@@ -21,7 +21,7 @@ use  IEEE.STD_LOGIC_UNSIGNED.all;
 entity Microcomputer is
 	port(
 
-		clk         : in std_logic;                       --	Input clock 48MHz
+		clk48m      : in std_logic;                       --	Input clock 48MHz
 		
 		rxd			    : in std_logic;
 		txd   			: out std_logic;
@@ -44,6 +44,8 @@ end Microcomputer;
 architecture struct of Microcomputer is
 
 	signal n_reset						: std_logic;-- :='1';
+  signal clk                : std_logic;
+  signal pll_locked         : std_logic;
 	signal n_WR							: std_logic;
 	signal n_RD							: std_logic;
 	signal cpuAddress					: std_logic_vector(15 downto 0);
@@ -87,8 +89,6 @@ architecture struct of Microcomputer is
 	signal ps2Clk						: std_logic;
 	signal ps2Data						: std_logic;
 	
-	signal switches       : std_logic_vector(1 downto 0);
-	signal buttons        : std_logic_vector(1 downto 0);
   signal r1 : std_logic;
   signal r2 : std_logic;
   signal g1 : std_logic;
@@ -98,8 +98,15 @@ architecture struct of Microcomputer is
 	
 begin
   
+pll_48_inst : entity work.pll
+  port map
+  (
+    inclk0  => clk48m,
+    locked  => pll_locked,
+    c0      => clk  -- master clock
+  );
   
-  n_reset <= '1'; --not key(0);
+  n_reset <= not (key(2) or not pll_locked);
 	
 -- ____________________________________________________________________________________
 -- CPU CHOICE GOES HERE
