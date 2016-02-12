@@ -34,6 +34,16 @@ entity Microcomputer is
 		
 		h_sync			: out std_logic;
 		v_sync			: out std_logic;
+    
+    flash_cs_n  : out std_logic;
+    flash_clk   : out std_logic;
+    flash_di    : out std_logic;
+    flash_do    : in std_logic;
+    
+--    F_TMS       : in std_logic;
+--    F_TCK       : in std_logic;
+--    F_TDO       : out std_logic;
+--    F_TDI       : in std_logic;
 
 		ps2_clk	  	: inout std_logic;
 		ps2_dat	  	: inout std_logic
@@ -86,17 +96,22 @@ architecture struct of Microcomputer is
 	signal serialClock				: std_logic;
 	signal sdClock						: std_logic;
 	
-	signal ps2Clk						: std_logic;
-	signal ps2Data						: std_logic;
-	
   signal r1 : std_logic;
   signal r2 : std_logic;
   signal g1 : std_logic;
   signal g2 : std_logic;
   signal b1 : std_logic;
   signal b2 : std_logic;
+  
+  signal rc : unsigned(21 downto 0);
+  signal force_reset : std_logic := '1';
 	
 begin
+
+--flash_cs_n <= F_TMS;
+--flash_clk  <= F_TCK;
+--flash_di   <= F_TDI;
+--F_TDO      <= flash_do;
   
 pll_48_inst : entity work.pll
   port map
@@ -106,8 +121,21 @@ pll_48_inst : entity work.pll
     c0      => clk  -- master clock
   );
   
-  n_reset <= not (key(2) or not pll_locked);
-	
+  --n_reset <= not (key(2) or not pll_locked);
+	n_reset <= not (not pll_locked or force_reset);
+  
+  process(clk)
+  begin
+    if rising_edge(clk) then
+ --     if key(2) = '1' then
+ --       force_reset <='1';
+      if rc(21) = '1' then
+        force_reset <= '0';
+      else
+        rc <= rc + 1;
+      end if;
+    end if;
+  end process;
 -- ____________________________________________________________________________________
 -- CPU CHOICE GOES HERE
 cpu1 : entity work.t80s

@@ -47,6 +47,11 @@ set_global_assignment -name LAST_QUARTUS_VERSION 13.1
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "AS INPUT TRI-STATED"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS PROGRAMMING PIN"
+
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -56,6 +61,10 @@ set_location_assignment PIN_12 -to ep_dclk
 set_location_assignment PIN_6 -to epcs_asdi
 set_location_assignment PIN_13 -to epcs_data
 set_location_assignment PIN_8 -to epcs_ncs
+#set_location_assignment PIN_15 -to F_TDI
+#set_location_assignment PIN_20 -to F_TDO
+#set_location_assignment PIN_16 -to F_TCK
+#set_location_assignment PIN_18 -to F_TMS
 set_location_assignment PIN_51 -to sdram_dq[13]
 set_location_assignment PIN_50 -to sdram_dq[14]
 set_location_assignment PIN_49 -to sdram_dq[15]
@@ -111,8 +120,8 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 #set_location_assignment PIN_1 -to led[2]
 #set_location_assignment PIN_2 -to led[1]
 #set_location_assignment PIN_3 -to led[0]
-set_location_assignment PIN_87 -to rxd
-set_location_assignment PIN_86 -to txd
+set_location_assignment PIN_87 -to txd
+set_location_assignment PIN_86 -to rxd
 set_location_assignment PIN_85 -to beep
 set_location_assignment PIN_42 -to sdram_dqm[0]
 set_location_assignment PIN_59 -to sdram_dqm[1]
